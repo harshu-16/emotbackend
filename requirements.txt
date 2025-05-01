@@ -1,0 +1,9 @@
+flask==2.3.2
+flask-cors==4.0.0
+opencv-python==4.7.0.72
+numpy==1.24.3
+fer==22.5.0
+SpeechRecognition==3.10.0
+transformers==4.36.0
+torch==2.0.1
+pyttsx3==2.90
