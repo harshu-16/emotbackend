@@ -90,7 +90,7 @@ playsound==1.3.0
 proglog==0.1.11
 protobuf==5.29.4
 pyarrow==19.0.1
-PyAudio @ file:///C:/Users/harsh/Downloads/PyAudio-0.2.14-cp310-cp310-win_amd64.whl#sha256=2a166fc88d435a2779810dd2678354adc33499e9d4d7f937f28b20cc55893e83
+PyAudio
 pycparser==2.22
 pydeck==0.9.1
 pydub==0.25.1
