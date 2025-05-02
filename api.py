@@ -215,19 +215,6 @@ def interact_with_user(emotion):
     Provides verbal feedback to the user based on detected emotion
     """
     try:
-        engine = pyttsx3.init()
-        
-        # Set properties
-        engine.setProperty('rate', 150)
-        engine.setProperty('volume', 1.0)
-        
-        # Try to set female voice if available
-        voices = engine.getProperty('voices')
-        for voice in voices:
-            if "female" in voice.name.lower():
-                engine.setProperty('voice', voice.id)
-                break
-        
         responses = {
             "happy": "I'm so glad you're feeling happy! Keep spreading those positive vibes!",
             "sad": "I'm here for you. It's okay to feel sad sometimes. You're not alone.",
@@ -237,21 +224,34 @@ def interact_with_user(emotion):
             "fear": "Don't worry, you're safe. I'm right here with you.",
             "disgust": "Yikes! That doesn't sound great. Let's try to turn things around."
         }
-        
+
         message = responses.get(emotion, "I'm here with you no matter how you feel.")
         logger.info(f"Assistant responds to {emotion}: {message}")
-        
-        # Run TTS in a separate thread to avoid blocking
+
         def speak():
-            engine.say(message)
-            engine.runAndWait()
-            
+            try:
+                engine = pyttsx3.init()
+                engine.setProperty('rate', 150)
+                engine.setProperty('volume', 1.0)
+                
+                # Try to set female voice if available
+                voices = engine.getProperty('voices')
+                for voice in voices:
+                    if "female" in voice.name.lower():
+                        engine.setProperty('voice', voice.id)
+                        break
+                
+                engine.say(message)
+                engine.runAndWait()
+            except Exception as e:
+                logger.error(f"TTS thread error: {e}")
+
         thread = threading.Thread(target=speak)
         thread.daemon = True
         thread.start()
         return True
     except Exception as e:
-        logger.error(f"Error in text-to-speech: {e}")
+        logger.error(f"Error in text-to-speech setup: {e}")
         return False
 
 def send_alert_email(emotion):
@@ -360,7 +360,7 @@ def video_analysis():
     try:
         if not request.json or 'image' not in request.json:
             return jsonify({"error": "No image data provided"}), 400
-        
+            
         image_data = request.json["image"]
         emotion = analyze_image(image_data)
         
