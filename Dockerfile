@@ -1,29 +1,24 @@
-# Use official Python image
+# Use an official Python base image
 FROM python:3.11-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Install required system packages
+# Install system dependencies for PyAudio
 RUN apt-get update && apt-get install -y \
+    gcc \
+    libasound-dev \
     portaudio19-dev \
-    build-essential \
+    libportaudio2 \
+    libportaudiocpp0 \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
 # Copy project files
-COPY . /app/
+COPY . .
 
 # Install Python dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose a port (adjust if needed)
-EXPOSE 5000
-
-# Run your app (change to your actual start command)
+# Run your app (change if needed)
 CMD ["python", "app.py"]
