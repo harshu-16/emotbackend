@@ -1,6 +1,7 @@
+# 1. Base image
 FROM python:3.11-slim
 
-# Install system dependencies needed for PyAudio
+# 2. Install system deps for PyAudio + ffmpeg
 RUN apt-get update && apt-get install -y \
     gcc \
     libasound-dev \
@@ -8,12 +9,17 @@ RUN apt-get update && apt-get install -y \
     libportaudio2 \
     libportaudiocpp0 \
     ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/*
 
+# 3. Set working directory
 WORKDIR /app
 
-COPY . .
-
+# 4. Copy and install Python deps
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "app.py"]
+# 5. Copy the rest of your code
+COPY . .
+
+# 6. Launch your server
+CMD ["python", "emoticare/api.py"]
