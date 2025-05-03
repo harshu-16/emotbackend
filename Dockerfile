@@ -1,7 +1,6 @@
-# Use an official Python base image
 FROM python:3.11-slim
 
-# Install system dependencies for PyAudio
+# Install system dependencies needed for PyAudio
 RUN apt-get update && apt-get install -y \
     gcc \
     libasound-dev \
@@ -11,14 +10,10 @@ RUN apt-get update && apt-get install -y \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy project files
 COPY . .
 
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Run your app (change if needed)
 CMD ["python", "app.py"]
