@@ -22,4 +22,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # 6. Launch your server
-CMD ["python", "emoticare/api.py"]
+CMD ["python", "simple_api.py"]
