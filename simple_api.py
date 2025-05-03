@@ -73,7 +73,7 @@ def mock_play_music_based_on_emotion(emotion):
     time.sleep(1)
     return True
 
-app = Flask(__name__)
+app = Flask(_name_)
 CORS(app)
 
 ongoing_analysis = {
@@ -103,39 +103,31 @@ def reset_status():
 @app.route('/api/analyze_face', methods=['POST'])
 def api_analyze_face():
     global ongoing_analysis
-    
+
     try:
         data = request.json
         if not data or 'image' not in data:
             return jsonify({"error": "No image data provided"}), 400
-        
+
         ongoing_analysis["status"] = "analyzing_face"
         ongoing_analysis["message"] = "Analyzing facial expression..."
 
         def analyze_face_thread():
             try:
-                # For now, just pass None (or later save image and pass its path)
+                # For now, pass None because we're not saving the image yet
                 emotion = analyze_emotion_from_image(None)
                 ongoing_analysis["face_emotion"] = emotion
                 update_final_emotion()
             except Exception as e:
                 ongoing_analysis["message"] = f"Face analysis error: {str(e)}"
-        
+
         thread = threading.Thread(target=analyze_face_thread)
         thread.start()
 
         return jsonify({"status": "Face analysis started"})
-        
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-@app.route('/api/analyze_voice', methods=['POST'])
-def api_analyze_voice():
-    global ongoing_analysis
-    
-    try:
-        ongoing_analysis["status"] = "analyzing_voice"
-        ongoing_analysis["message"] = "Analyzing voice emotion..."
 
         def analyze_voice_thread():
             try:
@@ -236,7 +228,5 @@ def index():
         ]
     })
 
-if __name__ == '__main__':
-    # Bind to the PORT environment variable on Render
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+if _name_ == '_main_':
+    app.run(debug=True, port=5000)
