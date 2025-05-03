@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from face_emotion import analyze_face_emotion
+from face_emotion import analyze_emotion_from_image
 import threading
 import time
 import base64
@@ -114,7 +114,8 @@ def api_analyze_face():
 
         def analyze_face_thread():
             try:
-                emotion = analyze_face_emotion()
+                # For now, just pass None (or later save image and pass its path)
+                emotion = analyze_emotion_from_image(None)
                 ongoing_analysis["face_emotion"] = emotion
                 update_final_emotion()
             except Exception as e:
@@ -236,4 +237,6 @@ def index():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # Bind to the PORT environment variable on Render
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
